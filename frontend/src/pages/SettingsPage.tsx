@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Mail, Save, Camera, Shield, Calendar, Zap, AlertTriangle, LogOut, Pen, Eye, EyeOff } from "lucide-react";
+import { Mail, Save, Camera, Shield, Calendar, Zap, AlertTriangle, LogOut, Pen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { useXPContext } from "../context/XPContext";
