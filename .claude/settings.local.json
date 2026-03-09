@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(where psql:*)",
+      "Bash(pg_isready:*)",
+      "Bash(docker:*)",
+      "Bash(ls:*)",
+      "Bash(alembic revision:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(uvicorn app.main:app:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill:*)",
+      "Bash(wmic process:*)",
+      "Bash(pip show:*)"
+    ]
+  }
+}
