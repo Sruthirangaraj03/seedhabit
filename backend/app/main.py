@@ -33,12 +33,17 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+cors_origins = [
+    settings.FRONTEND_URL,
+    "http://localhost:5173",
+    "https://seedhabit-frontend.onrender.com",
+]
+# Remove duplicates and empty strings
+cors_origins = [o for o in set(cors_origins) if o]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        settings.FRONTEND_URL,
-        "http://localhost:5173",
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
