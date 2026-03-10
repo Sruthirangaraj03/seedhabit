@@ -1,4 +1,4 @@
-"""SeedHabit API - Main FastAPI application."""
+"""HunterHabit API - Main FastAPI application."""
 
 import logging
 
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
-    title="SeedHabit API",
+    title="HunterHabit API",
     version="1.0.0",
     description="A habit tracking micro-SaaS API",
 )
@@ -45,21 +45,22 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    max_age=3600,
 )
 
 
 @app.on_event("startup")
 async def startup_event() -> None:
     """Log application startup."""
-    logger.info("SeedHabit API starting up...")
+    logger.info("HunterHabit API starting up...")
 
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:
     """Log application shutdown."""
-    logger.info("SeedHabit API shutting down...")
+    logger.info("HunterHabit API shutting down...")
 
 
 @app.get("/health")
@@ -74,4 +75,4 @@ app.include_router(streaks_router, prefix="/api/v1", tags=["streaks"])
 app.include_router(dashboard_router, prefix="/api/v1", tags=["dashboard"])
 app.include_router(admin_router, prefix="/api/v1/admin", tags=["admin"])
 
-logger.info("SeedHabit API initialized successfully")
+logger.info("HunterHabit API initialized successfully")

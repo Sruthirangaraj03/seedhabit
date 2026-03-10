@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { XPProvider } from "./context/XPContext";
+import { HunterStatsProvider } from "./context/HunterStatsContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import App from "./App";
 import "./index.css";
 
@@ -15,11 +17,15 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <XPProvider>
-          <App />
-        </XPProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <XPProvider>
+            <HunterStatsProvider>
+              <App />
+            </HunterStatsProvider>
+          </XPProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );

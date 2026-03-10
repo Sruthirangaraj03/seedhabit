@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { useXP } from "../hooks/useXP";
+import { useXP, type RankInfo } from "../hooks/useXP";
 
 interface XPContextType {
   xp: number;
@@ -7,6 +7,11 @@ interface XPContextType {
   xpInLevel: number;
   xpForNext: number;
   xpPercent: number;
+  rankInfo: RankInfo;
+  nextRank: RankInfo | null;
+  xpInRank: number;
+  xpForNextRank: number;
+  rankPercent: number;
   addXP: (amount: number) => void;
   removeXP: (amount: number) => void;
   showCelebration: boolean;

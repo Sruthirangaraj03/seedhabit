@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label ? (
           <label
             htmlFor={inputId}
-            className="mb-1.5 block text-sm font-medium text-gray-300"
+            className="mb-1.5 block font-display text-xs font-medium uppercase tracking-wider text-gray-500"
           >
             {label}
           </label>
@@ -25,21 +25,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           ref={ref}
           className={cn(
-            "w-full rounded-xl border bg-surface-300/50 px-4 py-2.5 text-sm text-gray-200 backdrop-blur-sm transition-all duration-200",
+            "w-full rounded-lg border bg-surface-400/60 px-4 py-2.5 text-sm text-gray-200 backdrop-blur-sm",
+            "transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
             "placeholder:text-gray-600",
-            "focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/50",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
+            "focus:outline-none focus:ring-1 focus:ring-primary-400/30 focus:border-primary-400/40 focus:bg-surface-400/80",
+            "disabled:opacity-40 disabled:cursor-not-allowed",
             error
-              ? "border-red-500/50 focus:border-red-500"
-              : "border-primary-500/10 hover:border-primary-500/20",
+              ? "border-neon-red/40 focus:border-neon-red/60 focus:ring-neon-red/20"
+              : "border-primary-400/8 hover:border-primary-400/15",
             className
           )}
           {...props}
         />
         {error ? (
-          <p className="mt-1 text-sm text-red-400">{error}</p>
+          <p className="mt-1.5 text-xs font-medium text-neon-red/80">{error}</p>
         ) : helperText ? (
-          <p className="mt-1 text-sm text-gray-600">{helperText}</p>
+          <p className="mt-1.5 text-xs text-gray-600">{helperText}</p>
         ) : null}
       </div>
     );

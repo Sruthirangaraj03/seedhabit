@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Mail, Save, Camera, Shield, Calendar, Zap, AlertTriangle, LogOut, Pen } from "lucide-react";
+import { Mail, Save, Camera, Shield, Calendar, Zap, LogOut, Pen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { useXPContext } from "../context/XPContext";
@@ -10,7 +10,7 @@ import type { User as UserType } from "../types/user";
 
 export function SettingsPage() {
   const { user, logout } = useAuth();
-  const { level, xp, xpInLevel, xpForNext, xpPercent } = useXPContext();
+  const { xp, rankInfo, nextRank, xpInRank, xpForNextRank, rankPercent } = useXPContext();
   const [fullName, setFullName] = useState(user?.full_name || "");
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -58,14 +58,6 @@ export function SettingsPage() {
     }
   };
 
-  const handleDeleteAccount = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
-    if (confirmed) {
-      logout();
-    }
-  };
 
   return (
     <motion.div
@@ -73,50 +65,85 @@ export function SettingsPage() {
       animate={{ opacity: 1 }}
       className="mx-auto max-w-4xl space-y-8 pb-10"
     >
-      {/* ─── Profile Header ─── */}
-      <div className="glass overflow-hidden rounded-2xl">
-        {/* Cover gradient */}
-        <div className="relative h-28 bg-gradient-to-r from-primary-600/30 via-neon-purple/20 to-primary-500/30">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.15),transparent_60%)]" />
+      {/* ─── HUNTER PROFILE ─── */}
+      <div className="overflow-hidden rounded-lg border border-[#00d4ff]/20 bg-[#0a1628]/80 shadow-[0_0_30px_rgba(0,212,255,0.08)] backdrop-blur-md">
+        {/* Cover: Dark system banner with cyan grid */}
+        <div className="relative h-28 bg-[#060e1a]">
+          {/* Grid pattern */}
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(0,212,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.3) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          {/* Subtle glow at top */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00d4ff]/5 to-transparent" />
+          {/* System label */}
+          <div className="absolute left-6 top-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#00d4ff]/40">
+            [ HUNTER PROFILE ]
+          </div>
         </div>
 
         <div className="relative px-6 pb-6">
-          {/* Avatar overlapping cover */}
+          {/* Avatar overlapping cover with rank border glow */}
           <div className="relative -mt-12 mb-4 flex items-end justify-between">
             <div className="relative">
               {user?.avatar_url ? (
                 <img
                   src={user.avatar_url}
                   alt={user.full_name}
-                  className="h-20 w-20 rounded-2xl border-4 border-surface-400 object-cover shadow-xl"
+                  className="h-20 w-20 rounded-lg object-cover"
+                  style={{
+                    border: `3px solid ${rankInfo.color}`,
+                    boxShadow: `0 0 15px ${rankInfo.glowColor}, 0 0 30px ${rankInfo.glowColor}`,
+                  }}
                 />
               ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-4 border-surface-400 bg-gradient-to-br from-primary-500 to-neon-purple text-2xl font-bold text-white shadow-xl">
+                <div
+                  className="flex h-20 w-20 items-center justify-center rounded-lg bg-[#0a1628] text-2xl font-black text-white"
+                  style={{
+                    border: `3px solid ${rankInfo.color}`,
+                    boxShadow: `0 0 15px ${rankInfo.glowColor}, 0 0 30px ${rankInfo.glowColor}`,
+                  }}
+                >
                   {initials}
                 </div>
               )}
               <button
                 type="button"
-                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-surface-400 bg-surface-300 shadow-md transition-colors hover:bg-primary-500/20"
+                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-md border border-[#00d4ff]/30 bg-[#0a1628] shadow-md transition-colors hover:bg-[#00d4ff]/10"
                 aria-label="Change avatar"
               >
-                <Camera className="h-3 w-3 text-gray-400" />
+                <Camera className="h-3 w-3 text-[#00d4ff]" />
               </button>
+              {/* Rank badge */}
+              <div
+                className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-black"
+                style={{
+                  backgroundColor: rankInfo.color,
+                  color: rankInfo.rank === "E" ? "#fff" : "#000",
+                  boxShadow: `0 0 10px ${rankInfo.glowColor}`,
+                }}
+              >
+                {rankInfo.rank}
+              </div>
             </div>
 
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setEditMode(!editMode)}
-                className="flex items-center gap-1.5 rounded-lg border border-primary-500/20 bg-primary-500/5 px-3 py-1.5 text-xs font-medium text-primary-400 transition-colors hover:bg-primary-500/10"
+                className="flex items-center gap-1.5 rounded-lg border border-[#00d4ff]/20 bg-[#00d4ff]/5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#00d4ff] transition-colors hover:bg-[#00d4ff]/10"
               >
                 <Pen className="h-3 w-3" />
-                {editMode ? "Cancel" : "Edit Profile"}
+                {editMode ? "Cancel" : "Edit"}
               </button>
               <button
                 type="button"
                 onClick={logout}
-                className="flex items-center gap-1.5 rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/10"
+                className="flex items-center gap-1.5 rounded-lg border border-[#ef4444]/20 bg-[#ef4444]/5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#ef4444] transition-colors hover:bg-[#ef4444]/10"
               >
                 <LogOut className="h-3 w-3" />
                 Logout
@@ -126,57 +153,72 @@ export function SettingsPage() {
 
           {/* Name & Email */}
           <div className="mb-5">
-            <h2 className="text-xl font-bold text-white">{user?.full_name || "User"}</h2>
-            <p className="text-sm text-gray-500">{user?.email}</p>
+            <h2 className="text-xl font-black text-white">{user?.full_name || "Hunter"}</h2>
+            <p className="font-mono text-xs text-[#00d4ff]/50">{user?.email}</p>
           </div>
 
-          {/* Stats strip */}
+          {/* ─── HUNTER STATUS ─── */}
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#00d4ff]/40">
+            Hunter Status
+          </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-xl border border-primary-500/10 bg-surface-300/30 p-3">
+            {/* RANK */}
+            <div className="rounded-lg border border-[#00d4ff]/10 bg-[#060e1a]/60 p-3">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500/10">
-                  <Zap className="h-4 w-4 text-primary-400" />
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-black"
+                  style={{
+                    backgroundColor: `${rankInfo.color}15`,
+                    color: rankInfo.color,
+                  }}
+                >
+                  {rankInfo.rank}
                 </div>
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Level</p>
-                  <p className="text-lg font-bold text-white">{level}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00d4ff]/40">Rank</p>
+                  <p className="text-sm font-black" style={{ color: rankInfo.color }}>
+                    {rankInfo.label.replace(" Hunter", "")}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-primary-500/10 bg-surface-300/30 p-3">
+            {/* POWER (XP) */}
+            <div className="rounded-lg border border-[#00d4ff]/10 bg-[#060e1a]/60 p-3">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
-                  <Zap className="h-4 w-4 text-amber-400" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00d4ff]/10">
+                  <Zap className="h-4 w-4 text-[#00d4ff]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Total XP</p>
-                  <p className="text-lg font-bold text-white">{xp.toLocaleString()}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00d4ff]/40">Power</p>
+                  <p className="text-lg font-black text-[#00d4ff]">{xp.toLocaleString()}</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-primary-500/10 bg-surface-300/30 p-3">
+            {/* AWAKENED (Joined) */}
+            <div className="rounded-lg border border-[#00d4ff]/10 bg-[#060e1a]/60 p-3">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
-                  <Calendar className="h-4 w-4 text-violet-400" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#7c3aed]/10">
+                  <Calendar className="h-4 w-4 text-[#7c3aed]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Joined</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00d4ff]/40">Awakened</p>
                   <p className="text-sm font-bold text-white">{memberSince}</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-primary-500/10 bg-surface-300/30 p-3">
+            {/* STATUS */}
+            <div className="rounded-lg border border-[#00d4ff]/10 bg-[#060e1a]/60 p-3">
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
                   <Shield className="h-4 w-4 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Status</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00d4ff]/40">Status</p>
                   <div className="flex items-center gap-1.5">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
                     <p className="text-sm font-bold text-white">{user?.is_active ? "Active" : "Inactive"}</p>
                   </div>
                 </div>
@@ -184,17 +226,25 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* XP Progress bar */}
-          <div className="mt-4 rounded-xl border border-primary-500/10 bg-surface-300/30 p-3">
+          {/* ─── RANK PROGRESS ─── */}
+          <div className="mt-4 rounded-lg border border-[#00d4ff]/10 bg-[#060e1a]/60 p-3">
             <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Progress to Level {level + 1}</span>
-              <span className="text-[10px] font-medium text-gray-500">{xpInLevel} / {xpForNext} XP</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00d4ff]/40">
+                Rank Progress {nextRank ? `\u2192 ${nextRank.label}` : "[ MAX RANK ]"}
+              </span>
+              <span className="font-mono text-[10px] font-medium text-[#00d4ff]/60">
+                {xpInRank.toLocaleString()} / {xpForNextRank.toLocaleString()} XP
+              </span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-surface-600">
+            <div className="h-2 overflow-hidden rounded-full bg-[#0a1628]">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-primary-500 to-neon-purple"
+                className="h-full rounded-full"
+                style={{
+                  background: `linear-gradient(to right, ${rankInfo.color}, ${nextRank ? nextRank.color : rankInfo.color})`,
+                  boxShadow: `0 0 10px ${rankInfo.glowColor}`,
+                }}
                 initial={{ width: 0 }}
-                animate={{ width: `${xpPercent}%` }}
+                animate={{ width: `${rankPercent}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
               />
             </div>
@@ -204,15 +254,15 @@ export function SettingsPage() {
           {(user?.is_verified || user?.oauth_provider) && (
             <div className="mt-3 flex flex-wrap gap-2">
               {user?.is_verified && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1 text-[11px] font-medium text-emerald-400">
+                <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
                   <Shield className="h-3 w-3" />
-                  Verified Account
+                  Verified Hunter
                 </span>
               )}
               {user?.oauth_provider && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/20 bg-blue-500/5 px-2.5 py-1 text-[11px] font-medium capitalize text-blue-400">
+                <span className="inline-flex items-center gap-1 rounded-md border border-[#00d4ff]/20 bg-[#00d4ff]/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider capitalize text-[#00d4ff]">
                   <Mail className="h-3 w-3" />
-                  {user.oauth_provider} Connected
+                  {user.oauth_provider} Linked
                 </span>
               )}
             </div>
@@ -220,28 +270,35 @@ export function SettingsPage() {
         </div>
       </div>
 
-      {/* ─── Edit Profile (collapsible) ─── */}
+      {/* ─── MODIFY HUNTER DATA (collapsible) ─── */}
       {editMode && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-2xl p-6"
+          className="rounded-lg border border-[#00d4ff]/20 bg-[#0a1628]/80 p-6 backdrop-blur-md"
         >
-          <h3 className="mb-5 text-sm font-semibold uppercase tracking-wider text-gray-400">Edit Profile</h3>
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#00d4ff]/40">
+            [ System ]
+          </div>
+          <h3 className="mb-5 text-sm font-black uppercase tracking-wider text-[#00d4ff]"
+            style={{ textShadow: "0 0 10px rgba(0,212,255,0.3)" }}
+          >
+            Modify Hunter Data
+          </h3>
 
           {successMessage && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 rounded-lg bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-400"
+              className="mb-4 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 font-mono text-sm font-medium text-emerald-400"
             >
-              {successMessage}
+              [SYSTEM] {successMessage}
             </motion.div>
           )}
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400">
-              {error}
+            <div className="mb-4 rounded-lg border border-[#ef4444]/20 bg-[#ef4444]/10 px-4 py-2.5 font-mono text-sm font-medium text-[#ef4444]">
+              [ERROR] {error}
             </div>
           )}
 
@@ -250,7 +307,7 @@ export function SettingsPage() {
               <Input
                 label="Full Name"
                 type="text"
-                placeholder="Your full name"
+                placeholder="Your hunter name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -261,9 +318,9 @@ export function SettingsPage() {
                   type="email"
                   value={user?.email || ""}
                   disabled
-                  helperText="Cannot be changed"
+                  helperText="Cannot be modified"
                 />
-                <Mail className="absolute right-3 top-9 h-4 w-4 text-gray-600" />
+                <Mail className="absolute right-3 top-9 h-4 w-4 text-[#00d4ff]/30" />
               </div>
             </div>
 
@@ -271,36 +328,19 @@ export function SettingsPage() {
               <button
                 type="button"
                 onClick={() => { setEditMode(false); setFullName(user?.full_name || ""); }}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-400 transition-colors hover:bg-surface-300/50"
+                className="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-500 transition-colors hover:bg-[#00d4ff]/5 hover:text-[#00d4ff]"
               >
                 Cancel
               </button>
               <Button type="submit" isLoading={isLoading}>
                 <Save className="h-4 w-4" />
-                Save Changes
+                Save Data
               </Button>
             </div>
           </form>
         </motion.div>
       )}
 
-      {/* ─── Danger Zone ─── */}
-      <div className="rounded-2xl border border-red-500/10 bg-surface-400/40 p-6 backdrop-blur-md">
-        <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/10">
-            <AlertTriangle className="h-5 w-5 text-red-400" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-sm font-semibold text-red-400">Delete Account</h3>
-            <p className="mt-1 text-sm leading-relaxed text-gray-500">
-              Permanently remove your account, all habits, streaks, and history. This action is irreversible.
-            </p>
-          </div>
-          <Button variant="danger" onClick={handleDeleteAccount}>
-            Delete
-          </Button>
-        </div>
-      </div>
     </motion.div>
   );
 }

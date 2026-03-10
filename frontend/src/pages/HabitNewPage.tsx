@@ -24,7 +24,7 @@ export function HabitNewPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="mx-auto max-w-xl space-y-6"
+      className="mx-auto max-w-2xl space-y-6"
     >
       <Link to="/habits" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary-400 transition-colors">
         <ArrowLeft className="h-4 w-4" />

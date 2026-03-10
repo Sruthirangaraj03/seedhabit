@@ -74,11 +74,6 @@ export function useHabits(options?: UseHabitsOptions): UseHabitsReturn {
 
   const deleteHabit = useCallback(
     async (habitId: number): Promise<boolean> => {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this habit? This action cannot be undone."
-      );
-      if (!confirmed) return false;
-
       try {
         await habitService.deleteHabit(habitId);
         await fetchHabits();

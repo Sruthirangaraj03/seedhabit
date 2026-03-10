@@ -1,7 +1,6 @@
-import { CheckCircle2, Circle, Sparkles } from "lucide-react";
+import { Circle, Swords } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { TodayHabit } from "../../types/dashboard";
-import { cn } from "../../lib/utils";
 
 interface TodayChecklistProps {
   habits: TodayHabit[];
@@ -11,53 +10,77 @@ interface TodayChecklistProps {
 }
 
 export function TodayChecklist({ habits, completedCount, totalCount, onToggle }: TodayChecklistProps) {
-  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-  const allDone = completedCount === totalCount && totalCount > 0;
+  const pending = habits.filter((h) => !h.completed);
+  const pendingCount = totalCount - completedCount;
+  const progress = totalCount > 0 ? (pendingCount / totalCount) * 100 : 0;
 
   return (
-    <div className="glass rounded-xl p-6">
+    <div
+      className="system-panel relative overflow-hidden rounded-xl p-6"
+      style={{
+        background: "rgba(15, 23, 42, 0.8)",
+        border: "1px solid rgba(0, 212, 255, 0.15)",
+        backdropFilter: "blur(12px)",
+        boxShadow: "0 0 20px rgba(0, 212, 255, 0.05)",
+      }}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Today's Quests</h3>
-          {allDone ? (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="flex items-center gap-1 rounded-full bg-neon-green/10 px-2 py-0.5"
-            >
-              <Sparkles className="h-3 w-3 text-neon-green" />
-              <span className="text-[10px] font-bold text-neon-green">ALL DONE</span>
-            </motion.div>
-          ) : null}
+          <Swords className="h-4 w-4" style={{ color: "#00d4ff" }} />
+          <h3
+            className="system-label text-sm font-bold uppercase tracking-[0.15em]"
+            style={{
+              color: "#00d4ff",
+              textShadow: "0 0 10px rgba(0,212,255,0.4)",
+            }}
+          >
+            PENDING QUESTS
+          </h3>
         </div>
-        <span className="text-sm font-bold text-primary-400">
-          {completedCount}/{totalCount}
+        <span
+          className="text-sm font-bold"
+          style={{
+            color: "#00d4ff",
+            textShadow: "0 0 8px rgba(0,212,255,0.4)",
+          }}
+        >
+          {pendingCount}/{totalCount}
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-5 h-2 overflow-hidden rounded-full bg-surface-600">
+      <div
+        className="mb-5 h-2 overflow-hidden rounded-full"
+        style={{
+          background: "rgba(0, 212, 255, 0.08)",
+          border: "1px solid rgba(0, 212, 255, 0.1)",
+        }}
+      >
         <motion.div
-          className={cn(
-            "h-full rounded-full transition-colors duration-500",
-            allDone
-              ? "bg-gradient-to-r from-neon-green to-emerald-400"
-              : "bg-gradient-to-r from-primary-500 to-neon-purple"
-          )}
+          className="h-full rounded-full"
+          style={{
+            background: "linear-gradient(to right, #fbbf24, #f59e0b)",
+            boxShadow: "0 0 12px rgba(251, 191, 36, 0.6)",
+          }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         />
       </div>
 
-      <div className="space-y-1">
-        {habits.length === 0 ? (
-          <p className="py-4 text-center text-sm text-gray-500">
-            No active habits yet. Create one to start your journey.
+      <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
+        {pending.length === 0 ? (
+          <p
+            className="py-4 text-center text-sm"
+            style={{
+              color: "rgba(0, 212, 255, 0.4)",
+            }}
+          >
+            All quests cleared!
           </p>
         ) : null}
         <AnimatePresence>
-          {habits.map((habit, i) => (
+          {pending.map((habit, i) => (
             <motion.button
               key={habit.id}
               type="button"
@@ -65,46 +88,29 @@ export function TodayChecklist({ habits, completedCount, totalCount, onToggle }:
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
               onClick={() => onToggle(habit.id)}
-              className={cn(
-                "flex w-full items-center gap-3 rounded-lg p-3 text-left transition-all duration-200",
-                habit.completed
-                  ? "bg-neon-green/5"
-                  : "hover:bg-primary-500/5"
-              )}
+              className="flex w-full items-center gap-3 rounded-lg p-3 text-left transition-all duration-200"
+              style={{
+                background: "transparent",
+                borderLeft: "2px solid transparent",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(0, 212, 255, 0.03)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
             >
-              <motion.div
-                animate={habit.completed ? { scale: [1, 1.3, 1] } : {}}
-                transition={{ duration: 0.3 }}
-              >
-                {habit.completed ? (
-                  <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-neon-green" />
-                ) : (
-                  <Circle className="h-5 w-5 flex-shrink-0 text-gray-600" />
-                )}
-              </motion.div>
-              <span
-                className={cn(
-                  "flex-1 text-sm font-medium transition-all",
-                  habit.completed
-                    ? "text-gray-500 line-through"
-                    : "text-gray-200"
-                )}
-              >
+              <Circle className="h-5 w-5 flex-shrink-0 text-gray-600" />
+              <span className="flex-1 text-sm font-medium text-gray-200">
                 {habit.name}
               </span>
               {habit.streak > 0 ? (
-                <span className="flex items-center gap-0.5 text-xs font-bold text-amber-400">
+                <span
+                  className="flex items-center gap-0.5 text-xs font-bold"
+                  style={{ color: "#7c3aed", textShadow: "0 0 6px rgba(124,58,237,0.4)" }}
+                >
                   {habit.streak}d
                 </span>
-              ) : null}
-              {habit.completed ? (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="text-[10px] font-bold text-neon-green"
-                >
-                  +10 XP
-                </motion.span>
               ) : null}
             </motion.button>
           ))}

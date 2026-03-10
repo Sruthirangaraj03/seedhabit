@@ -3,23 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-2 rounded-lg font-bold uppercase tracking-wider transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
   {
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 hover:brightness-110",
+          "bg-gradient-to-r from-[#00d4ff] to-[#0099cc] text-black shadow-[0_0_15px_rgba(0,212,255,0.3)] hover:shadow-[0_0_25px_rgba(0,212,255,0.5)] hover:brightness-110",
         secondary:
-          "glass text-gray-200 hover:border-primary-500/20",
+          "border border-[#00d4ff]/30 bg-[#0a1628]/80 text-[#00d4ff] backdrop-blur-md hover:border-[#00d4ff]/50 hover:bg-[#00d4ff]/10",
         outline:
-          "border border-primary-500/20 text-primary-400 hover:bg-primary-500/10",
+          "border border-[#00d4ff]/40 text-[#00d4ff] hover:bg-[#00d4ff]/10 hover:shadow-[0_0_10px_rgba(0,212,255,0.15)]",
         ghost:
-          "text-gray-400 hover:bg-primary-500/5 hover:text-gray-200",
+          "text-gray-400 hover:bg-[#00d4ff]/5 hover:text-[#00d4ff]",
         danger:
-          "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20",
+          "border border-[#ef4444]/30 bg-[#ef4444]/10 text-[#ef4444] shadow-[0_0_10px_rgba(239,68,68,0.15)] hover:bg-[#ef4444]/20 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
+        sm: "h-8 px-3 text-xs",
         md: "h-10 px-4 text-sm",
         lg: "h-12 px-6 text-base",
         icon: "h-10 w-10",

@@ -1,10 +1,11 @@
 """Google OAuth authentication handler."""
 
 import logging
-import secrets
+import time
 from urllib.parse import urlencode
 
 from httpx import AsyncClient
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -19,6 +20,24 @@ GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
+# State token serializer for CSRF protection (valid for 10 minutes)
+_state_serializer = URLSafeTimedSerializer(settings.SECRET_KEY, salt="oauth-state")
+STATE_MAX_AGE = 600  # 10 minutes
+
+
+def _create_state() -> str:
+    """Create a signed state token for CSRF protection."""
+    return _state_serializer.dumps({"t": int(time.time())})
+
+
+def _verify_state(state: str) -> bool:
+    """Verify a signed state token. Returns True if valid."""
+    try:
+        _state_serializer.loads(state, max_age=STATE_MAX_AGE)
+        return True
+    except (BadSignature, SignatureExpired):
+        return False
+
 
 def google_authorize_url() -> str:
     """Generate Google OAuth authorization URL.
@@ -26,7 +45,7 @@ def google_authorize_url() -> str:
     Returns:
         The full Google OAuth authorization URL with query parameters.
     """
-    state = secrets.token_urlsafe(32)
+    state = _create_state()
     params = {
         "client_id": settings.GOOGLE_CLIENT_ID,
         "redirect_uri": settings.GOOGLE_REDIRECT_URI,
@@ -40,7 +59,7 @@ def google_authorize_url() -> str:
     return url
 
 
-async def google_callback(code: str, db: Session) -> TokenResponse:
+async def google_callback(code: str, state: str | None, db: Session) -> TokenResponse:
     """Handle Google OAuth callback.
 
     Exchange authorization code for tokens, get user info,
@@ -48,6 +67,7 @@ async def google_callback(code: str, db: Session) -> TokenResponse:
 
     Args:
         code: The authorization code from Google.
+        state: The state parameter for CSRF validation.
         db: Database session.
 
     Returns:
@@ -56,6 +76,11 @@ async def google_callback(code: str, db: Session) -> TokenResponse:
     Raises:
         UnauthorizedError: If Google authentication fails.
     """
+    # Validate state for CSRF protection
+    if not state or not _verify_state(state):
+        logger.warning("Invalid or missing OAuth state parameter")
+        raise UnauthorizedError(detail="Invalid OAuth state — possible CSRF attack")
+
     async with AsyncClient() as client:
         # Exchange code for Google tokens
         token_response = await client.post(

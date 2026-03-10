@@ -14,25 +14,25 @@ const PRESET_COLORS = [
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">Color</label>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {PRESET_COLORS.map((color) => (
           <button
             key={color}
             type="button"
             onClick={() => onChange(color)}
             className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 hover:scale-110",
-              value === color ? "ring-2 ring-offset-2 ring-offset-surface-400 scale-110" : ""
+              "flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 hover:scale-110",
+              value === color
+                ? "ring-2 ring-[#00d4ff]/60 ring-offset-2 ring-offset-[#0a1628] scale-110 shadow-[0_0_12px_rgba(0,212,255,0.3)]"
+                : "ring-1 ring-gray-700/30 hover:ring-gray-600/50"
             )}
             style={{
               backgroundColor: color,
-              boxShadow: value === color ? `0 0 12px ${color}50` : undefined,
-              ...(value === color ? { ringColor: color } : {}),
+              boxShadow: value === color ? `0 0 16px ${color}50` : undefined,
             }}
             aria-label={`Select color ${color}`}
           >
-            {value === color && <Check className="h-3.5 w-3.5 text-white" />}
+            {value === color && <Check className="h-3.5 w-3.5 text-white drop-shadow-md" />}
           </button>
         ))}
       </div>

@@ -44,7 +44,6 @@ const ICON_OPTIONS: IconOption[] = [
 export function IconPicker({ value, onChange }: IconPickerProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">Icon</label>
       <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
         {ICON_OPTIONS.map(({ name, label, Icon }) => (
           <button
@@ -52,15 +51,15 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             type="button"
             onClick={() => onChange(name)}
             className={cn(
-              "flex flex-col items-center gap-1 rounded-xl border p-3 transition-all duration-200",
+              "flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all duration-200",
               value === name
-                ? "border-primary-500/30 bg-primary-500/10 text-primary-400 shadow-md shadow-primary-500/10"
-                : "border-primary-500/10 text-gray-500 hover:border-primary-500/20 hover:text-gray-400"
+                ? "border-[#00d4ff]/40 bg-[#00d4ff]/10 text-[#00d4ff] shadow-[0_0_15px_rgba(0,212,255,0.15),inset_0_0_10px_rgba(0,212,255,0.05)]"
+                : "border-gray-700/30 bg-[#0a1628]/50 text-gray-500 hover:border-[#00d4ff]/15 hover:text-gray-400"
             )}
             aria-label={`Select ${label} icon`}
           >
             <Icon className="h-5 w-5" />
-            <span className="text-[10px] font-medium">{label}</span>
+            <span className="font-mono text-[9px] font-bold uppercase tracking-wider">{label}</span>
           </button>
         ))}
       </div>

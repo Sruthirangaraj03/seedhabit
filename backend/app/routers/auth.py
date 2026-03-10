@@ -38,7 +38,9 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=TokenResponse, status_code=201)
+@limiter.limit("5/minute")
 async def register(
+    request: Request,
     user_data: UserCreate,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -50,7 +52,9 @@ async def register(
 
 
 @router.post("/login", response_model=TokenResponse)
+@limiter.limit("10/minute")
 async def login(
+    request: Request,
     credentials: UserLogin,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -62,7 +66,9 @@ async def login(
 
 
 @router.post("/refresh", response_model=TokenResponse)
+@limiter.limit("15/minute")
 async def refresh(
+    request: Request,
     body: dict,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -139,7 +145,9 @@ async def update_me(
 
 
 @router.post("/forgot-password")
+@limiter.limit("3/minute")
 async def forgot_password(
+    request: Request,
     request_data: ForgotPasswordRequest,
 ) -> dict[str, str]:
     """Request a password reset email.
@@ -197,6 +205,6 @@ async def google_oauth_callback(
     Returns:
         Access and refresh tokens.
     """
-    tokens = await google_callback(code, db)
+    tokens = await google_callback(code, state, db)
     logger.info("User authenticated via Google OAuth")
     return tokens

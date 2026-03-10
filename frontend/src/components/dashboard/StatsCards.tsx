@@ -1,4 +1,4 @@
-import { Layers, Activity, CheckCircle, TrendingUp } from "lucide-react";
+import { Swords, Activity, CheckCircle, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface StatsCardsProps {
@@ -11,39 +11,23 @@ interface StatsCardsProps {
 const stats = [
   {
     key: "total",
-    label: "Total Habits",
-    icon: Layers,
-    gradient: "from-blue-500 to-cyan-400",
-    glow: "shadow-blue-500/20",
-    bg: "bg-blue-500/10",
-    text: "text-blue-400",
+    label: "REGISTERED QUESTS",
+    icon: Swords,
   },
   {
     key: "active",
-    label: "Active Habits",
+    label: "ACTIVE QUESTS",
     icon: Activity,
-    gradient: "from-emerald-500 to-green-400",
-    glow: "shadow-emerald-500/20",
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
   },
   {
     key: "completions",
-    label: "Completions",
+    label: "TOTAL QUESTS",
     icon: CheckCircle,
-    gradient: "from-violet-500 to-purple-400",
-    glow: "shadow-violet-500/20",
-    bg: "bg-violet-500/10",
-    text: "text-violet-400",
   },
   {
     key: "rate",
-    label: "Completion Rate",
+    label: "CLEAR RATE",
     icon: TrendingUp,
-    gradient: "from-amber-500 to-orange-400",
-    glow: "shadow-amber-500/20",
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
   },
 ] as const;
 
@@ -63,15 +47,42 @@ export function StatsCards({ totalHabits, activeHabits, totalCompletions, comple
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: i * 0.1 }}
-          className={`glass rounded-xl p-4 hover:glow-sm transition-all duration-300 shadow-lg ${stat.glow}`}
+          className="system-panel relative overflow-hidden rounded-xl p-4 transition-all duration-300"
+          style={{
+            background: "rgba(15, 23, 42, 0.8)",
+            border: "1px solid rgba(0, 212, 255, 0.15)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 0 15px rgba(0, 212, 255, 0.05), inset 0 1px 0 rgba(0, 212, 255, 0.1)",
+          }}
         >
           <div className="flex items-center gap-3">
-            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
-              <stat.icon className={`h-5 w-5 ${stat.text}`} />
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl"
+              style={{
+                background: "rgba(0, 212, 255, 0.08)",
+                border: "1px solid rgba(0, 212, 255, 0.15)",
+              }}
+            >
+              <stat.icon className="h-5 w-5" style={{ color: "#00d4ff" }} />
             </div>
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-gray-500">{stat.label}</p>
-              <p className="text-2xl font-bold text-white">{values[stat.key]}</p>
+              <p
+                className="system-label text-[10px] font-bold uppercase tracking-[0.15em]"
+                style={{
+                  color: "#00d4ff",
+                  textShadow: "0 0 8px rgba(0,212,255,0.4)",
+                }}
+              >
+                {stat.label}
+              </p>
+              <p
+                className="text-2xl font-bold text-white"
+                style={{
+                  textShadow: "0 0 10px rgba(0,212,255,0.2)",
+                }}
+              >
+                {values[stat.key]}
+              </p>
             </div>
           </div>
         </motion.div>

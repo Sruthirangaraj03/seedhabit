@@ -6,9 +6,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    APP_NAME: str = "SeedHabit"
+    APP_NAME: str = "HunterHabit"
     DATABASE_URL: str = "postgresql://seedhabit:seedhabit@localhost:5433/seedhabit"
-    SECRET_KEY: str = "change-me-in-production"
+    SECRET_KEY: str = ""
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7

@@ -17,24 +17,24 @@ export function HabitCheckbox({ checked, color, onChange }: HabitCheckboxProps) 
         onChange();
       }}
       className={cn(
-        "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-200",
+        "relative flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
         checked
           ? "border-transparent"
-          : "border-gray-600 bg-transparent hover:border-gray-400 hover:scale-110"
+          : "border-gray-700 bg-transparent hover:border-primary-400/40 hover:scale-110"
       )}
       style={
         checked
-          ? { backgroundColor: color, borderColor: color, boxShadow: `0 0 12px ${color}40` }
+          ? { backgroundColor: color, borderColor: color, boxShadow: `0 0 15px ${color}30` }
           : undefined
       }
       aria-label={checked ? "Mark as incomplete" : "Mark as complete"}
     >
       <motion.div
         initial={false}
-        animate={checked ? { scale: [0, 1.3, 1], opacity: 1 } : { scale: 0, opacity: 0 }}
-        transition={{ duration: 0.3, type: "spring" }}
+        animate={checked ? { scale: [0, 1.2, 1], opacity: 1 } : { scale: 0, opacity: 0 }}
+        transition={{ duration: 0.35, type: "spring", stiffness: 400, damping: 15 }}
       >
-        <Check className="h-4 w-4 text-white" />
+        <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
       </motion.div>
     </button>
   );
