@@ -17,7 +17,7 @@ interface HabitCardProps {
   onArchive?: (habitId: number) => void;
 }
 
-export function HabitCard({ habit, onToggleComplete, onDelete, onArchive }: HabitCardProps) {
+export function HabitCard({ habit, onToggleComplete, onDelete, onArchive: _onArchive }: HabitCardProps) {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

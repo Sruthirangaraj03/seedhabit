@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Edit, Trash2, Loader2, Swords, ScrollText, CalendarDays, Target, TrendingUp } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Loader2, Swords, ScrollText, CalendarDays, Target } from "lucide-react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Habit } from "../types/habit";
